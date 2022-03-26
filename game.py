@@ -5,6 +5,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 
 from objects import Planet, SkyDome
+from random import randint
 
 class Game():
     AXIS_X = 1
@@ -57,7 +58,8 @@ class Game():
                 
     def init_view(self):
         glMatrixMode(GL_MODELVIEW)
-        gluLookAt(15, -20, 0, 0, 0, 0, 0, 0, 1)
+        gluLookAt(0, -20, 0, 0, 0, 0, 0, 0, 1)
+        glTranslatef(33, 75 ,0)
         self.view = glGetFloatv(GL_MODELVIEW_MATRIX)
         glLoadIdentity()
     
@@ -74,16 +76,11 @@ class Game():
                 self.button[event.button] = True
             if event.type == pygame.JOYBUTTONUP:
                 self.button[event.button] = False
-                
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE or event.key == pygame.K_RETURN:
-                    self.run = False
-                    
-            if self.button[0] and self.button[1] and self.button[8] and self.button[9]:
-                self.run = False
 
     def handle_keys(self):
         keypress = pygame.key.get_pressed()
+        if keypress[pygame.K_ESCAPE] or (self.button[0] and self.button[1] and self.button[8] and self.button[9]):
+            self.run = False
         if keypress[pygame.K_w] or self.button[0]:
             glTranslatef(0,0, self.speed * 0.1)
         if keypress[pygame.K_s] or self.button[1]:
@@ -92,18 +89,20 @@ class Game():
             glTranslatef(-self.speed * 0.1,0,0)
         if keypress[pygame.K_a]:
             glTranslatef(self.speed * 0.1,0,0)
+        if self.button[8] or self.button[9] or keypress[pygame.K_SPACE]:
+            self.init_view()
 
     def handle_joystick(self):
         glRotatef(self.axis[self.AXIS_X], 0, 1, 0)
         glRotatef(-self.axis[self.AXIS_Y], 1, 0, 0)
     
     def draw(self):
-        self.handle_events()
         
         glLoadIdentity()
         
         glPushMatrix()
         glLoadIdentity()
+        self.handle_events()
         self.handle_keys()
         self.handle_joystick()
         glMultMatrixf(self.view)
