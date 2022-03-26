@@ -66,7 +66,8 @@ class Game():
     def init_lighting(self):
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1])
+        glLightfv(GL_LIGHT0, GL_AMBIENT, (0, 0, 0, 1))
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, (1, 1, 1, 1))
     
     def handle_events(self):
         for event in pygame.event.get():
